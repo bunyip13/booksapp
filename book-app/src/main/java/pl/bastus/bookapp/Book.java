@@ -1,19 +1,15 @@
 package pl.bastus.bookapp;
 
 import java.util.Date;
-import java.util.Scanner;
 
 class Book {
 	private String bookTitle;
 	private Date bookDate;
 	private float bookPrice;
 	private String author;
-	private String titleLoaded;
-	
-	private static Scanner sc = new Scanner(System.in);
 
 	public Book(String bookTitle, Date bookDate, float bookPrice, String author) {
-		super();
+//		super();
 		this.bookTitle = bookTitle;
 		this.bookDate = bookDate;
 		this.bookPrice = bookPrice;
@@ -24,7 +20,7 @@ class Book {
 	}
 
 	public String showBookInfo() {
-		return bookTitle + ", date: " + bookDate + ", price: " + bookPrice + ", author: " + author;
+		return getBookTitle() + ", date: " + getBookDate() + ", price: " + getBookPrice() + ", author: " + getAuthor();
 	}
 
     String getBookTitle() {
@@ -57,17 +53,5 @@ class Book {
 
 	void setAuthor(String author) {
 		this.author = author;
-	}
-
-	String gettitleLoaded() {
-		return titleLoaded;
-	}
-
-	void settitleLoaded(String titleLoaded) {
-		this.titleLoaded = titleLoaded;
-	}
-
-	static String getUserInput() {
-		return sc.nextLine().trim();
 	}
 }

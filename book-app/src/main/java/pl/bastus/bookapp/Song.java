@@ -14,7 +14,6 @@ class Song {
     }
 
     Song(){
-
     }
 
     @Override
