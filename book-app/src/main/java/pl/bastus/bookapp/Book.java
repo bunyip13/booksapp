@@ -5,23 +5,24 @@ import java.time.format.DateTimeFormatter;
 
 class Book {
     private String bookTitle;
-    private LocalDate bookDate;
+    private String bookDate;
     private float bookPrice;
     private String author;
     private LocalDate bookAddedDate;
 
     private DateTimeFormatter day = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    private DateTimeFormatter year = DateTimeFormatter.ofPattern("yyyy");
 
+    /* String constructor */
     Book(String bookTitle, String bookDate, String bookPrice, String author, String bookAddedDate) {
         this.bookTitle = bookTitle;
-        this.bookDate = LocalDate.parse(bookDate);
+        this.bookDate = bookDate;
         this.bookPrice = Float.parseFloat(bookPrice);
         this.author = author;
         this.bookAddedDate = LocalDate.parse(bookAddedDate);
     }
 
-    Book(String bookTitle, LocalDate bookDate, float bookPrice, String author, LocalDate bookAddedDate) {
+    /* Normal constructor */
+    Book(String bookTitle, String bookDate, float bookPrice, String author, LocalDate bookAddedDate) {
         this.bookTitle = bookTitle;
         this.bookDate = bookDate;
         this.bookPrice = bookPrice;
@@ -71,29 +72,44 @@ class Book {
     }
 
     /* Date */
-    LocalDate getBookDate() {
+    String getBookDate() {
         return bookDate;
     }
 
-    String getBookDateString() {
-        return bookDate.format(year);
-    }
-
-    void setBookDate(LocalDate bookDate) {
+    void setBookDate(String bookDate) {
         this.bookDate = bookDate;
     }
 
+    /*
+    String getBookDateString() {
+        return bookDate.format(year);
+    }
+    */
+
+    /*
     void setBookDate(String bookDate) {
         this.bookDate = LocalDate.parse(bookDate);
     }
 
+    void setBookDate(String bookDate, DateTimeFormatter format) {
+        this.bookDate = LocalDate.parse(bookDate, format);
+    }
+    */
     /* Price */
     float getBookPrice() {
         return bookPrice;
     }
 
+    String getBookPriceString() {
+        return Float.toString(bookPrice);
+    }
+
     void setBookPrice(float bookPrice) {
         this.bookPrice = bookPrice;
+    }
+
+    void setBookPrice(String bookPrice) {
+        this.bookPrice = Float.parseFloat(bookPrice);
     }
 
     /* Author */
@@ -119,7 +135,7 @@ class Book {
     }
 
     void setBookAddedDate(String bookAddedDate) {
-        this.bookAddedDate = LocalDate.parse(bookAddedDate);
+        this.bookAddedDate = LocalDate.parse(bookAddedDate, day);
     }
 
     @Override

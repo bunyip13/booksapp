@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -14,6 +15,8 @@ class BookDAO {
 	private List<Book> books = new ArrayList<>();
 	private Book book;
 	private File file;
+
+    private DateTimeFormatter day = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
 	BookDAO(File file) {
 		this.file = file;
@@ -33,7 +36,7 @@ class BookDAO {
 		do {
 			System.out.println();
 			System.out.println("What to do now?");
-			System.out.println("[1] Add book");
+			System.out.println("[1] Add book"); // TODO: add to array
 			System.out.println("[2] Delete book"); // TODO: delete
 			System.out.println("[3] Show books ");
 			System.out.println("[6] Load books from file "); // TODO: implement load from file to array
@@ -72,9 +75,10 @@ class BookDAO {
 		addedDate();
 		System.out.println("Thank you. Book: " + book.getBookTitle()
 				+ ", author: " + book.getAuthor()
+                + ", price: " + book.getBookPrice()
 				+ ", date: " + book.getBookDate()
-				+ ", added date: " + book.getBookAddedDate()
-				+ ", price: " + book.getBookPrice());
+				+ ", added date: " + book.getBookAddedDate());
+
 
 		addBookToBooks(book);
 	}
@@ -93,33 +97,30 @@ class BookDAO {
 		book.setAuthor(getUserInput());
 	}
 
-	private void addDate() { // TODO: date as string?
-		Pattern datePattern;
-//		datePattern = Pattern.compile("[0-2][0-9]{3}\\.[0-1]?[0-9]\\.[0-3]?[0-9]");
-		datePattern = Pattern.compile("[0-2][0-9]{3}");
+	private void addDate() {
+//		Pattern datePattern = Pattern.compile("[0-3]?[0-9]\\.[0-1]?[0-9]\\.[0-2][0-9]{3}");
+        Pattern datePattern = Pattern.compile("[0-2][0-9]{3}");
 		String loadedDate;
 		do {
-			Matcher datePattern_Matcher;
-			System.out.print("Date: ");
+            System.out.print("Date: ");
 			loadedDate = getUserInput();
-			datePattern_Matcher = datePattern.matcher(loadedDate);
-
+            Matcher datePattern_Matcher = datePattern.matcher(loadedDate);
 			if (datePattern_Matcher.matches()) {
-				try {
-					book.setBookDate(loadedDate);
-				} catch (NullPointerException pe) {
-					System.out.println("Something not right, date pattern should match: 2014");
-				}
-			}
+                try {
+                    book.setBookDate(loadedDate);
+                } catch (NullPointerException pe) {
+                    System.out.println("Something not right, date pattern should match: 2014");
+                }
+            }
 		}
 		while (book.getBookDate() == null);
 	}
 
 	private void addedDate() {
-		book.setBookAddedDate(LocalDate.now());
-	} // TODO: format
+        book.setBookAddedDate(LocalDate.parse(LocalDate.now().format(day), day));
+	}
 
-	private void addPrice() { // TODO: price as string?
+	private void addPrice() {
 		Pattern pricePattern = Pattern.compile("[0-9]+(\\.[0-9]+)?");
 		Integer bookPriceInt = null;
 		do {
@@ -131,7 +132,7 @@ class BookDAO {
 			// if (pricePattern.matcher(priceLoaded_Scanner).matches()) {
 			// shortcut
 			if (pricePattern_Matcher.matches()) {
-				book.setBookPrice(Float.valueOf(priceLoaded_Scanner));
+				book.setBookPrice(priceLoaded_Scanner);
 				bookPriceInt = Math.round(book.getBookPrice());
 			}
 		}
@@ -154,12 +155,11 @@ class BookDAO {
 		Book book;
 		for (int i = 0; i < getBooks().size(); i++) {
 			book = getBooks().get(i);
-			System.out.println(i + ": " + book.getBookTitle());
+			System.out.println(i + ": " + book.getBookTitle() + ", " + book.getAuthor() + " (" + book.getBookDate() + ")");
 		}
 		System.out.println();
 
 		Pattern numberPattern = Pattern.compile("[0-9]+");
-
 		String loadedNumber;
 		do {
 			System.out.print("Which book to show?");
@@ -171,9 +171,11 @@ class BookDAO {
 		if (getBooks().size() > bookNumber) {
 			Book chosenBook = getBooks().get(bookNumber);
 			System.out.println("Your choice: " + chosenBook.getBookTitle()
+                    + ", author " + chosenBook.getAuthor()
 					+ ", price " + chosenBook.getBookPrice()
-					+ ", date " + chosenBook.getBookDate().toString()
-					+ ", author " + chosenBook.getAuthor());
+					+ ", date " + chosenBook.getBookDate()
+                    + ", date added " + chosenBook.getBookAddedDate()
+            );
 		}
 		else {
 			System.out.println("No such book, sorry!");
@@ -201,10 +203,10 @@ class BookDAO {
 	}
 
 	private void writeArrayToFile() { // TODO: write array to file
-		writeFile2(file, book.getBookTitle() + "/"
+		/*writeFile2(file, book.getBookTitle() + "/"
 				+ book.getAuthor() + "/"
-				+ book.getBookDateString() + "/"
-				+ (book.getBookAddedDateString()) + "/n");
+				+ book.getBookDate() + "/"
+				+ (book.getBookAddedDateString()) + "/n");*/
 	}
 
 	private void getBooksFromFile(File f) {
