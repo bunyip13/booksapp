@@ -3,8 +3,7 @@ package pl.bastus.bookapp;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -15,7 +14,6 @@ class BookDAO {
 	private List<Book> books = new ArrayList<>();
 	private Book book;
 	private File file;
-	private SimpleDateFormat sdf;
 
 	BookDAO(File file) {
 		this.file = file;
@@ -41,7 +39,7 @@ class BookDAO {
 			System.out.println("[6] Load books from file "); // TODO: implement load from file to array
 			System.out.println("[7] Save books to file "); // TODO: implement save from array to file
 			System.out.println("[8] Erase file "); // TODO: erase
-			System.out.println("[x] Exit");
+			System.out.println("[x] Exit"); // TODO: or use database... study learn read
 
 			userChoice = getUserInput();
 			switch (userChoice) {
@@ -71,9 +69,11 @@ class BookDAO {
 		addAuthor();
 		addDate();
 		addPrice();
+		addedDate();
 		System.out.println("Thank you. Book: " + book.getBookTitle()
 				+ ", author: " + book.getAuthor()
 				+ ", date: " + book.getBookDate()
+				+ ", added date: " + book.getBookAddedDate()
 				+ ", price: " + book.getBookPrice());
 
 		addBookToBooks(book);
@@ -98,7 +98,6 @@ class BookDAO {
 //		datePattern = Pattern.compile("[0-2][0-9]{3}\\.[0-1]?[0-9]\\.[0-3]?[0-9]");
 		datePattern = Pattern.compile("[0-2][0-9]{3}");
 		String loadedDate;
-		sdf = new SimpleDateFormat("yyyy");
 		do {
 			Matcher datePattern_Matcher;
 			System.out.print("Date: ");
@@ -107,14 +106,18 @@ class BookDAO {
 
 			if (datePattern_Matcher.matches()) {
 				try {
-					book.setBookDate(sdf.parse(loadedDate));
-				} catch (ParseException | NullPointerException pe) {
-					System.out.println("Something not right, date pattern should match: 2014.01.05");
+					book.setBookDate(loadedDate);
+				} catch (NullPointerException pe) {
+					System.out.println("Something not right, date pattern should match: 2014");
 				}
 			}
 		}
 		while (book.getBookDate() == null);
 	}
+
+	private void addedDate() {
+		book.setBookAddedDate(LocalDate.now());
+	} // TODO: format
 
 	private void addPrice() { // TODO: price as string?
 		Pattern pricePattern = Pattern.compile("[0-9]+(\\.[0-9]+)?");
@@ -200,8 +203,8 @@ class BookDAO {
 	private void writeArrayToFile() { // TODO: write array to file
 		writeFile2(file, book.getBookTitle() + "/"
 				+ book.getAuthor() + "/"
-				+ sdf.format(book.getBookDate()) + "/"
-				+ Float.toString(book.getBookPrice()) + "/n");
+				+ book.getBookDateString() + "/"
+				+ (book.getBookAddedDateString()) + "/n");
 	}
 
 	private void getBooksFromFile(File f) {
@@ -212,20 +215,17 @@ class BookDAO {
 			while ((line = br.readLine()) != null) {
 				addBookFromFile(line);
 			}
+			br.close();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			System.err.format("IOException: %s%n", ioe);
-		} finally {
-			if(br != null){
-				br.close();
-			}
 		}
 	}
 
 	private void addBookFromFile(String l) {
 		String[] elements = l.split("/");
-		Song nextSong = new Song(elements[0], elements[1], elements[2], elements[3]);
-		songs.add(nextSong);
+		Book nextBook = new Book(elements[0], elements[1], elements[2], elements[3], elements[4]);
+		books.add(nextBook);
 	}
 
 	/*
