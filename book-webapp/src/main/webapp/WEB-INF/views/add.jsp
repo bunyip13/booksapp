@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<a href="list">Back to book list</a><br />
-		<form:form method="POST" modelAttribute="bookDto">
+		<form:form method="POST" modelAttribute="bookDTO">
 			<table border="1">
 				<tbody>
 					<tr>

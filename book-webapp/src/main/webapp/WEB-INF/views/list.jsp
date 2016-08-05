@@ -7,7 +7,7 @@
 		<title>Books list</title>
 	</head>
 	<body>
-		<a href="<c:url value="add" />"Add Book</a><br />
+		<a href="<c:url value="add" />">Add book</a><br />
 		<table border="1">
 			<thead>
 				<tr>
@@ -19,7 +19,7 @@
 				<c:forEach items="${books}" var="book" varStatus="status">
 				<tr>
 					<td>${status.index}</td>
-					<td><a href="<c:url value="book-${status.index}" />"${book.title}</a></td>
+					<td><a href="<c:url value="book-${status.index}" />"> ${book.title} </a></td>
 				</tr>
 				</c:forEach>
 			</tbody>

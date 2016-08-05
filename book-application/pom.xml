@@ -24,5 +24,11 @@
 			<artifactId>annotations-java5</artifactId>
 			<version>RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.39</version>
+		</dependency>
+
 	</dependencies>
 </project>

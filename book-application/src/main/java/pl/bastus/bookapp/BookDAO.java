@@ -2,25 +2,21 @@ package pl.bastus.bookapp;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.sql.*;
 
 public class BookDAO {
 	private List<Book> books = new LinkedList<>();
 	private Book book;
-	private File file;
-
+	private DatabaseController dbc = new DatabaseController();
 	private DateTimeFormatter day = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-
-	BookDAO(File file) {
-		this.file = file;
-	}
 
 	/* Scanner */
 	private static Scanner sc = new Scanner(System.in);
@@ -29,16 +25,22 @@ public class BookDAO {
 		return sc.nextLine().trim();
 	}
 
-	/////////////////////* MENU */////////////////////
+	/* Getters */
+	public List<Book> getBooks() {
+		return books;
+	}
 
-	void menuDisplay() {
+	/* MENU */
+	void menuDisplay() throws SQLException {
 		String userChoice;
 		do {
 			System.out.println();
 			System.out.println("What to do now?");
 			System.out.println("[1] Add book"); // TODO: add to array
 			//System.out.println("[2] Delete book"); // TODO: delete
-			System.out.println("[3] Show books ");
+			System.out.println("[3] Show books");
+			//System.out.println("[4] Connect database");
+			//System.out.println("[5] Add book to database");
 			//System.out.println("[6] Load books from file "); // TODO: implement load from file to array
 			//System.out.println("[7] Save books to file "); // TODO: implement save from array to file
 			//System.out.println("[8] Erase file "); // TODO: erase
@@ -55,6 +57,12 @@ public class BookDAO {
 				case "3":
 					showBooks();
 					break;
+				/*case "4":
+					connectDatabase();
+					break;
+				case "5":
+					addData(book.getBookTitle(),book.getAuthor(),book.getBookDate(),book.getBookAddedDate(),book.getBookPrice());
+					break;*/
 				case "8":
 					break;
 			}
@@ -78,7 +86,9 @@ public class BookDAO {
                 + ", price: " + book.getBookPrice()
 				+ ", date: " + book.getBookDate()
 				+ ", added date: " + book.getBookAddedDate());
-		addBookToBooks(book);
+		dbc.connectDatabase();
+		dbc.addBookToDatabase(book);
+		dbc.disconnectDatabase();
 	}
 
 	private void addTitle() {
@@ -143,13 +153,18 @@ public class BookDAO {
 		// System.out.println("Book added!");
 	}
 
-	private void showBooks() {
+	private void showBooks() { // TODO: get book from database
 		System.out.println();
 		System.out.println("#################");
 		System.out.println("#   Book list   #");
 		System.out.println("#################");
 		System.out.println();
 
+		dbc.connectDatabase();
+		dbc.getBooksFromDatabase();
+		dbc.disconnectDatabase();
+
+		/*
 		Book book;
 		for (int i = 0; i < getBooks().size(); i++) {
 			book = getBooks().get(i);
@@ -177,11 +192,10 @@ public class BookDAO {
 		}
 		else {
 			System.out.println("No such book, sorry!");
-		}
+		}*/
 	}
 
-	/////////////////////* FILE OPERATIONS */////////////////////
-
+	/* FILE OPERATIONS *//*
 	@SuppressWarnings("unused")
 	private void writeFile(File f, String w) {
 		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)))) {
@@ -204,10 +218,10 @@ public class BookDAO {
 
 	@SuppressWarnings("unused")
 	private void writeArrayToFile() { // TODO: write array to file
-		/*writeFile2(file, book.getBookTitle() + "/"
+		writeFile2(file, book.getBookTitle() + "/"
 				+ book.getAuthor() + "/"
 				+ book.getBookDate() + "/"
-				+ (book.getBookAddedDateString()) + "/n");*/
+				+ (book.getBookAddedDateString()) + "/n");
 	}
 
 	@SuppressWarnings("unused")
@@ -262,31 +276,31 @@ public class BookDAO {
 		}
 	}*/
 
-	public List<Book> getBooks() {
-		return books;
-	}
-
-	/////////////////////* SORTING *///////////////////// // TODO: sorting
-	/*
+	/* SORTING */ // TODO: sorting
+	@SuppressWarnings("unused")
 	void sortTitle() {
 		getBooks();
-		Collections.sort(songs, (Song p1, Song p2) -> p1.getTitle().compareTo(p2.getTitle()));
-		songs.forEach(Song::printSong);
+		Collections.sort(books, (Book b1, Book b2) -> b1.getBookTitle().compareTo(b2.getBookTitle()));
+		books.forEach(Book::showBookInfo);
 	}
-	void sortArtist() {
+	@SuppressWarnings("unused")
+	void sortAuthor() {
 		getBooks();
-		Collections.sort(songs, (Song p1, Song p2) -> p1.getArtist().compareTo(p2.getArtist()));
-		songs.forEach(Song::printSong);
+		Collections.sort(books, (Book b1, Book b2) -> b1.getAuthor().compareTo(b2.getAuthor()));
+		books.forEach(Book::showBookInfo);
 	}
-	void sortRate() {
+	@SuppressWarnings("unused")
+	void sortPrice() {
 		getBooks();
-		Collections.sort(songs, (Song p1, Song p2) -> p1.getRate().compareTo(p2.getRate()));
-		songs.forEach(Song::printSong);
+		Collections.sort(books, (Book b1, Book b2) -> b1.getBookPriceString().compareTo(b2.getBookPriceString()));
+		books.forEach(Book::showBookInfo);
 	}
-	void sortBpm() {
+	@SuppressWarnings("unused")
+	void sortDate() {
 		getBooks();
-		Collections.sort(songs, (Song p1, Song p2) -> p1.getBpm().compareTo(p2.getBpm()));
-		songs.forEach(Song::printSong);
+		Collections.sort(books, (Book b1, Book b2) -> b1.getBookDate().compareTo(b2.getBookDate()));
+		books.forEach(Book::showBookInfo);
 	}
-	*/
+
+	/* END */
 }

@@ -27,6 +27,21 @@
 						<target>1.8</target>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.wildfly.plugins</groupId>
+					<artifactId>wildfly-maven-plugin</artifactId>
+					<version>1.1.0.Alpha10</version>
+				</plugin>
+                <plugin>
+                    <groupId>org.apache.tomcat.maven</groupId>
+                    <artifactId>tomcat7-maven-plugin</artifactId>
+                    <version>2.2</version>
+                    <configuration>
+                        <url>http://localhost:8080/manager/text</url>
+                        <server>TomcatServer</server>
+                        <path>/booksapp</path>
+                    </configuration>
+                </plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

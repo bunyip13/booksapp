@@ -38,7 +38,7 @@ public class BooksController {
 			bookDAO.addBookToBooks(book);
 			return "redirect:/list";
 		}
-		return "addd";
+		return "add";
 	}
 	
 	@RequestMapping("/book-{id}")
@@ -46,5 +46,9 @@ public class BooksController {
 		model.addAttribute("book", bookDAO.getBookByID(id));
 		return "attributes";
 	}
-	
+
+	@ModelAttribute("form")
+	public BookDTO getFormularz() {
+		return new BookDTO();
+	}
 }

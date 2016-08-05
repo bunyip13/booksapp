@@ -46,7 +46,7 @@ public class Book {
             book = (Book) b;
         } catch (ClassCastException cce) {
             cce.printStackTrace();
-            System.out.println("Class cast exception, probably b !(instaceof Book)");
+            System.out.println("Class cast exception, probably !(instaceof Book)");
         }
         return getBookTitle().equals(book.getBookTitle());
     }
@@ -56,11 +56,11 @@ public class Book {
         return getBookTitle().hashCode();
     }
 
-    /*
-    public String showBookInfo() {
+
+    String showBookInfo() {
         return getBookTitle() + ", date: " + getBookDate() + ", price: " + getBookPrice() + ", author: " + getAuthor();
     }
-    */
+
 
     /*Book Title */
     String getBookTitle() {
