@@ -16,7 +16,7 @@ public class BookDAO {
 	private List<Book> books = new LinkedList<>();
 	private Book book;
 	private DatabaseController dbc = new DatabaseController();
-	private DateTimeFormatter day = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+	private DateTimeFormatter day = DateTimeFormatter.ofPattern("dd-MM-yyyy"); // SQL przechowuje daty z pauzami
 
 	/* Scanner */
 	private static Scanner sc = new Scanner(System.in);
@@ -30,30 +30,34 @@ public class BookDAO {
 		return books;
 	}
 
+	public Book getBookByID(Integer id) { // TODO: take id from database, not from array
+		if (id<books.size()) {
+			return books.get(id);
+		} else {
+			return null;
+		}
+	}
+
 	/* MENU */
 	void menuDisplay() throws SQLException {
 		String userChoice;
 		do {
 			System.out.println();
 			System.out.println("What to do now?");
-			System.out.println("[1] Add book"); // TODO: add to array
-			//System.out.println("[2] Delete book"); // TODO: delete
+			System.out.println("[1] Add book");
+			System.out.println("[2] Delete book"); // TODO: delete
 			System.out.println("[3] Show books");
-			//System.out.println("[4] Connect database");
-			//System.out.println("[5] Add book to database");
-			//System.out.println("[6] Load books from file "); // TODO: implement load from file to array
-			//System.out.println("[7] Save books to file "); // TODO: implement save from array to file
-			//System.out.println("[8] Erase file "); // TODO: erase
-			System.out.println("[x] Exit"); // TODO: or use database... study learn read
+			//System.out.println("[8] Erase database (use with caution)"); // TODO: erase
+			System.out.println("[x] Exit");
 
 			userChoice = getUserInput();
 			switch (userChoice) {
 				case "1":
 					addBook();
 					break;
-				/*case "2":
-					songdao.getSongs();
-					break;*/
+				case "2":
+					removeBook();
+					break;
 				case "3":
 					showBooks();
 					break;
@@ -75,6 +79,7 @@ public class BookDAO {
 		System.out.println("#   Add Book   #");
 		System.out.println("################");
 		System.out.println();
+
 		book = new Book();
 		addTitle();
 		addAuthor();
@@ -85,7 +90,7 @@ public class BookDAO {
 				+ ", author: " + book.getAuthor()
                 + ", price: " + book.getBookPrice()
 				+ ", date: " + book.getBookDate()
-				+ ", added date: " + book.getBookAddedDate());
+				+ ", added date: " + book.getBookAddedDate() + " added.");
 		dbc.connectDatabase();
 		dbc.addBookToDatabase(book);
 		dbc.disconnectDatabase();
@@ -195,86 +200,24 @@ public class BookDAO {
 		}*/
 	}
 
-	/* FILE OPERATIONS *//*
-	@SuppressWarnings("unused")
-	private void writeFile(File f, String w) {
-		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)))) {
-			bw.write(w);
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-			System.err.format("IOException: %s%n", ioe);
-		}
+	private void removeBook(){
+		String userChoice;
+		System.out.println();
+		System.out.println("###################");
+		System.out.println("#   Remove book   #");
+		System.out.println("###################");
+		System.out.println();
+
+		System.out.println("Enter the Title of the book you want to remove:");
+
+		userChoice = getUserInput();
+
+		dbc.connectDatabase();
+		dbc.removeBookFromDatabaseByTitle(userChoice);
+		dbc.disconnectDatabase();
 	}
 
-	@SuppressWarnings("unused")
-	private void writeFile2(File f, String w) {
-		try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(f, true)))) {
-			pw.println(w);
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-			System.err.format("IOException: %s%n", ioe);
-		}
-	}
 
-	@SuppressWarnings("unused")
-	private void writeArrayToFile() { // TODO: write array to file
-		writeFile2(file, book.getBookTitle() + "/"
-				+ book.getAuthor() + "/"
-				+ book.getBookDate() + "/"
-				+ (book.getBookAddedDateString()) + "/n");
-	}
-
-	@SuppressWarnings("unused")
-	private void getBooksFromFile(File f) {
-		BufferedReader br;
-		String line;
-		try {
-			br = new BufferedReader(new FileReader(f));
-			while ((line = br.readLine()) != null) {
-				addBookFromFile(line);
-			}
-			br.close();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-			System.err.format("IOException: %s%n", ioe);
-		}
-	}
-
-	private void addBookFromFile(String l) {
-		String[] elements = l.split("/");
-		Book nextBook = new Book(elements[0], elements[1], elements[2], elements[3], elements[4]);
-		books.add(nextBook);
-	}
-
-	public Book getBookByID(Integer id) {
-		if (id<books.size()) {
-			return books.get(id);
-		} else {
-			return null;
-		}
-	}
-
-	/*
-	public void save(String fileName) throws FileNotFoundException {
-		BufferedWriter writer = null;
-		try {
-
-			writer = new BufferedWriter(new FileWriter(fileName));
-			for ( int i = 0; i < nbrMovies; i++)
-			{
-				writer.write(movies[i].getName());
-				writer.newLine();
-				writer.flush();
-			}
-
-		} catch(IOException ex) {
-			ex.printStackTrace();
-		} finally{
-			if(writer!=null){
-				writer.close();
-			}
-		}
-	}*/
 
 	/* SORTING */ // TODO: sorting
 	@SuppressWarnings("unused")
