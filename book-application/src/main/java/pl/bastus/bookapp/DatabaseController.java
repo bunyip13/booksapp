@@ -1,26 +1,32 @@
 package pl.bastus.bookapp;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Properties;
 
 class DatabaseController {
-    private Connection conn = null;
-    private Scanner scan;
 
-    void connectDatabase() {
-        String userName = "root";
-        String password = "";
-        String url = "jdbc:mysql://localhost:3306/javatutorials?useSSL=false";
+    private static Connection connectDatabase() {
+        Properties props = new Properties();
+        Connection conn = null;
         try {
-            conn = DriverManager.getConnection(url,userName,password);
-        } catch (SQLException e) {
+            FileInputStream fis = new FileInputStream("db.properties");
+            props.load(fis);
+            conn = DriverManager.getConnection(
+                    props.getProperty("DB_URL"),
+                    props.getProperty("DB_USERNAME"),
+                    props.getProperty("DB_PASSWORD"));
+        } catch ( IOException | SQLException e) {
             e.printStackTrace();
         }
+        return conn;
     }
 
+    /*
     void disconnectDatabase() {
         if (conn != null) {
             try {
@@ -29,20 +35,17 @@ class DatabaseController {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
     @SuppressWarnings("unused")
     private void addToDatabase(String title, String author,
                          String date, LocalDate date_added, Float price) {
-        try {
-            String query = "INSERT INTO booksapp VALUES (" +
-                    "NULL, '"+title+"', '"+author+"', '"+date+"', '"+date_added+"', '"+price+"');";
-            Statement stmt = conn.createStatement();
-            stmt.executeUpdate(query);
-            stmt.close();
-            if (conn != null) {
-                conn.close();
-            }
+        String query = "INSERT INTO booksapp VALUES (" +
+                "NULL, '"+title+"', '"+author+"', '"+date+"', '"+date_added+"', '"+price+"');";
+
+        try (Connection conn = connectDatabase();
+             Statement stmt = conn.createStatement()) {
+            stmt.executeQuery(query);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -54,20 +57,16 @@ class DatabaseController {
         String bookDate = book.getBookDate();
         float bookPrice = book.getBookPrice();
         LocalDate bookAddedDate = book.getBookAddedDate();
-        try {
-            String query = "INSERT INTO booksapp VALUES (" +
-                    "NULL, '"
-                    + bookTitle + "', '"
-                    + bookAuthor + "', '"
-                    + bookDate + "', '"
-                    + bookAddedDate + "', '"
-                    + bookPrice + "');";
-            Statement stmt = conn.createStatement();
+        String query = "INSERT INTO booksapp VALUES (" +
+                "NULL, '"
+                + bookTitle + "', '"
+                + bookAuthor + "', '"
+                + bookDate + "', '"
+                + bookAddedDate + "', '"
+                + bookPrice + "');";
+        try (Connection conn = connectDatabase();
+             Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(query);
-            stmt.close();
-            if (conn != null) {
-                conn.close();
-            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -81,8 +80,9 @@ class DatabaseController {
         System.out.println("Books added");
     }
 
-    void getBooksFromDatabase() {
-        System.out.println("Which table do you want to view?");
+    /*
+    void getTablesFromDatabase(String table) {
+        int tableInt = Integer.valueOf(table);
         try {
             DatabaseMetaData md = conn.getMetaData();
             ResultSet rs = md.getTables(null, null, "%", null);
@@ -93,36 +93,58 @@ class DatabaseController {
                 i++;
                 tables.add(rs.getString(3));
             }
-            scan = new Scanner(System.in);
-            int input = scan.nextInt();
-            printData(tables.get(input));
+            //getBooksFromDatabase(tables.get(tableInt)); // TODO: no arg
         } catch (SQLException sql) {
             sql.printStackTrace();
         }
+    }*/
+
+    void getBooksFromDatabase() {
+        final String QUERY = "SELECT id,title,author,date,date_added,price FROM booksapp";
+
+        try(Connection con = connectDatabase();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(QUERY)) {
+
+            while(rs.next()){
+                int id = rs.getInt("id");
+                String title = rs.getString("title");
+                String author = rs.getString("author");
+                String date = rs.getString("date");
+                String date_added = rs.getString("date_added");
+                String price = rs.getString("price");
+                System.out.println("ID: " + id +
+                        ", Title: " + title +
+                        ", Author: " + author +
+                        ", Date: " + date +
+                        ", Date added: " + date_added +
+                        ", Price: " + price);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void printData(String table) {
+    @SuppressWarnings("unused")
+    void getBooksFromDatabase1() {
         // columns from table
-        try {
-            DatabaseMetaData md = conn.getMetaData();
-            ResultSet rs = md.getColumns(null, null, table, "%");
-            //int i = 0;
+        final String QUERY = "SELECT * FROM booksapp";
+        try (Connection con = connectDatabase();
+             Statement stmt = con.createStatement()) {
+            DatabaseMetaData md = con.getMetaData();
+            //ResultSet rs = stmt.executeQuery(QUERY));
+            ResultSet rs = md.getColumns(null, null, "booksapp", "%"); //sqlowy znaczek odpowiadający gwiazdce
             ArrayList<String> columns = new ArrayList<>();
-            while (rs.next()) { // TODO: for sure we could make it work in java 8 way
+            while (rs.next()) {
                 columns.add(rs.getString(4));
-                //i++;
             }
-
             // print the data
-            Statement stmt = conn.createStatement();
-            ResultSet rs1 = stmt.executeQuery("SELECT * FROM " + table);
-            //int j = 0;
+            ResultSet rs1 = stmt.executeQuery(QUERY);
             while (rs1.next()) {
                 for (String colName : columns) {
                     Object colVar = rs1.getObject(colName);
                     System.out.println(colName + ": " + colVar);
                 }
-                //j++;
                 System.out.println();
             }
         } catch (SQLException sql) {
@@ -130,34 +152,56 @@ class DatabaseController {
         }
     }
 
-    private void removeBookFromDatabaseByID() {
-        System.out.println("Enter the ID of the book you want to remove:");
-        int id = scan.nextInt();
-        try {
-            String query = "DELETE FROM booksapp WHERE id = " + id;
-            Statement stmt = conn.createStatement();
-            stmt.execute(query);
-            stmt.close();
-            if (conn != null) {
-                conn.close();
-            }
+    @SuppressWarnings("unused")
+    void removeBookFromDatabaseByID(String stringID) {
+        int id = Integer.valueOf(stringID);
+        String QUERY = "DELETE FROM booksapp WHERE id = " + id;
+
+        try (Connection con = connectDatabase();
+             Statement stmt = con.createStatement()) {
+            stmt.execute(QUERY);
         } catch (SQLException sql) {
             sql.printStackTrace();
         }
     }
 
     void removeBookFromDatabaseByTitle(String title) {
-        try {
-            String query = "DELETE FROM booksapp WHERE title = '" + title + "'";
-            Statement stmt = conn.createStatement();
-            stmt.execute(query);
-            stmt.close();
-            if (conn != null) {
-                conn.close();
-            }
+        String QUERY = "DELETE FROM booksapp WHERE title = '" + title + "'";
+
+        try (Connection con = connectDatabase();
+             Statement stmt = con.createStatement()) {
+            stmt.execute(QUERY);
         } catch (SQLException sql) {
             sql.printStackTrace();
         }
     }
-
+    /*
+    private void updateBookInDatabase(Book book) { // TODO: pass book
+        ArrayList<String> columns = new ArrayList<>();
+        try {
+            DatabaseMetaData md = conn.getMetaData();
+            ResultSet rs = md.getColumns(null, null, "booksapp", "%");
+            while (rs.next()) {
+                columns.add(rs.getString(4));
+            }
+            // get values we want to change columns to
+            System.out.println("Enter the new values below");
+            ArrayList<String> colVals = new ArrayList<>();
+            for (String column : columns) {
+                System.out.println(column + ": ");
+                colVals.add(title);
+            }
+            // create query
+            Statement stmt = conn.createStatement();
+            for (int i = 0; i < columns.size(); i++) {
+                String query = "UPDATE booksapp SET "
+                        + columns.get(i) + " = '"
+                        + colVals.get(i) + "' WHERE "
+                        + " id = " + id;
+                stmt.executeUpdate(query);
+            }
+        } catch (SQLException sql) {
+            sql.printStackTrace();
+        }
+    }*/
 }

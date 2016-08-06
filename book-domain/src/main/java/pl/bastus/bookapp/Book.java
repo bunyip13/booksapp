@@ -13,6 +13,7 @@ public class Book {
     private DateTimeFormatter day = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     /* String constructor */
+    @SuppressWarnings("unused")
     Book(String bookTitle, String bookDate, String bookPrice, String author, String bookAddedDate) {
         this.bookTitle = bookTitle;
         this.bookDate = bookDate;
@@ -22,6 +23,7 @@ public class Book {
     }
 
     /* Normal constructor */
+    @SuppressWarnings("unused")
     Book(String bookTitle, String bookDate, float bookPrice, String author, LocalDate bookAddedDate) {
         this.bookTitle = bookTitle;
         this.bookDate = bookDate;
@@ -56,7 +58,7 @@ public class Book {
         return getBookTitle().hashCode();
     }
 
-
+    @SuppressWarnings("unused")
     String showBookInfo() {
         return getBookTitle() + ", date: " + getBookDate() + ", price: " + getBookPrice() + ", author: " + getAuthor();
     }
@@ -80,26 +82,12 @@ public class Book {
         this.bookDate = bookDate;
     }
 
-    /*
-    String getBookDateString() {
-        return bookDate.format(year);
-    }
-    */
-
-    /*
-    void setBookDate(String bookDate) {
-        this.bookDate = LocalDate.parse(bookDate);
-    }
-
-    void setBookDate(String bookDate, DateTimeFormatter format) {
-        this.bookDate = LocalDate.parse(bookDate, format);
-    }
-    */
     /* Price */
     float getBookPrice() {
         return bookPrice;
     }
 
+    @SuppressWarnings("unused")
     String getBookPriceString() {
         return Float.toString(bookPrice);
     }
@@ -126,6 +114,7 @@ public class Book {
         return bookAddedDate;
     }
 
+    @SuppressWarnings("unused")
     String getBookAddedDateString() {
         return bookAddedDate.format(day);
     }
@@ -134,6 +123,7 @@ public class Book {
         this.bookAddedDate = bookAddedDate;
     }
 
+    @SuppressWarnings("unused")
     void setBookAddedDate(String bookAddedDate) {
         this.bookAddedDate = LocalDate.parse(bookAddedDate, day);
     }

@@ -24,6 +24,7 @@ public class BookDTO {
 		return title;
 	}
 
+	@SuppressWarnings("unused")
 	public void setTitle(String title) {
 		this.title = title;
 	}
@@ -32,6 +33,7 @@ public class BookDTO {
 		return date;
 	}
 
+	@SuppressWarnings("unused")
 	public void setDate(String date) {
 		this.date = date;
 	}
@@ -40,6 +42,7 @@ public class BookDTO {
 		return price;
 	}
 
+	@SuppressWarnings("unused")
 	public void setPrice(Float price) {
 		this.price = price;
 	}
@@ -48,6 +51,7 @@ public class BookDTO {
 		return author;
 	}
 
+	@SuppressWarnings("unused")
 	public void setAuthor(String author) {
 		this.author = author;
 	}

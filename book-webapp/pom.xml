@@ -35,11 +35,6 @@
 			<version>1.2</version>
 		</dependency>
 		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<version>5.2.1.Final</version>
-		</dependency>
-		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 			<version>1.1.0.Final</version>
@@ -48,11 +43,6 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>5.2.4.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wildfly.plugins</groupId>
-			<artifactId>wildfly-plugin-core</artifactId>
-			<version>1.1.0.Alpha10</version>
 		</dependency>
 	</dependencies>
 </project>

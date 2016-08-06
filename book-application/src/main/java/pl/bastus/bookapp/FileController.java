@@ -28,7 +28,7 @@ public class FileController {
 	}
 
 	@SuppressWarnings("unused")
-	private void writeArrayToFile() { // TODO: write array to file
+	private void writeArrayToFile() {
         writeFile2(file, book.getBookTitle() + "/"
 				+ book.getAuthor() + "/"
 				+ book.getBookDate() + "/"

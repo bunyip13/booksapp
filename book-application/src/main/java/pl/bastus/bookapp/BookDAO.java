@@ -2,15 +2,14 @@ package pl.bastus.bookapp;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.sql.*;
 
 public class BookDAO {
 	private List<Book> books = new LinkedList<>();
@@ -18,14 +17,14 @@ public class BookDAO {
 	private DatabaseController dbc = new DatabaseController();
 	private DateTimeFormatter day = DateTimeFormatter.ofPattern("dd-MM-yyyy"); // SQL przechowuje daty z pauzami
 
-	/* Scanner */
+	/* SCANNER */
 	private static Scanner sc = new Scanner(System.in);
 	@NotNull
 	private String getUserInput() {
 		return sc.nextLine().trim();
 	}
 
-	/* Getters */
+	/* GETTERS */
 	public List<Book> getBooks() {
 		return books;
 	}
@@ -45,9 +44,8 @@ public class BookDAO {
 			System.out.println();
 			System.out.println("What to do now?");
 			System.out.println("[1] Add book");
-			System.out.println("[2] Delete book"); // TODO: delete
+			System.out.println("[2] Delete book"); // TODO: update / modify
 			System.out.println("[3] Show books");
-			//System.out.println("[8] Erase database (use with caution)"); // TODO: erase
 			System.out.println("[x] Exit");
 
 			userChoice = getUserInput();
@@ -61,18 +59,11 @@ public class BookDAO {
 				case "3":
 					showBooks();
 					break;
-				/*case "4":
-					connectDatabase();
-					break;
-				case "5":
-					addData(book.getBookTitle(),book.getAuthor(),book.getBookDate(),book.getBookAddedDate(),book.getBookPrice());
-					break;*/
-				case "8":
-					break;
 			}
 		} while (!userChoice.equalsIgnoreCase("x"));
 	}
 
+	/* ADDING */
 	private void addBook() {
 		System.out.println();
 		System.out.println("################");
@@ -91,9 +82,7 @@ public class BookDAO {
                 + ", price: " + book.getBookPrice()
 				+ ", date: " + book.getBookDate()
 				+ ", added date: " + book.getBookAddedDate() + " added.");
-		dbc.connectDatabase();
 		dbc.addBookToDatabase(book);
-		dbc.disconnectDatabase();
 	}
 
 	private void addTitle() {
@@ -158,16 +147,16 @@ public class BookDAO {
 		// System.out.println("Book added!");
 	}
 
-	private void showBooks() { // TODO: get book from database
+	/* SHOWING */
+	private void showBooks() {
 		System.out.println();
 		System.out.println("#################");
 		System.out.println("#   Book list   #");
 		System.out.println("#################");
 		System.out.println();
 
-		dbc.connectDatabase();
-		dbc.getBooksFromDatabase();
-		dbc.disconnectDatabase();
+		dbc.getBooksFromDatabase(); // TODO: only one table, so maybe only print it out?
+	}
 
 		/*
 		Book book;
@@ -197,29 +186,60 @@ public class BookDAO {
 		}
 		else {
 			System.out.println("No such book, sorry!");
-		}*/
-	}
+		}
 
-	private void removeBook(){
-		String userChoice;
+	/* REMOVING */
+	private void removeBook() {
 		System.out.println();
 		System.out.println("###################");
 		System.out.println("#   Remove book   #");
 		System.out.println("###################");
 		System.out.println();
 
-		System.out.println("Enter the Title of the book you want to remove:");
+		String userChoice;
+		do {
+			System.out.println();
+			System.out.println("Search book by id or title?");
+			System.out.println("[1] ID");
+			System.out.println("[2] Title");
+			System.out.println("[x] Exit");
 
-		userChoice = getUserInput();
-
-		dbc.connectDatabase();
-		dbc.removeBookFromDatabaseByTitle(userChoice);
-		dbc.disconnectDatabase();
+			userChoice = getUserInput();
+			switch (userChoice) {
+				case "1":
+					removeBookByID();
+					break;
+				case "2":
+					removeBookByTitle();
+			}
+		} while (!userChoice.equalsIgnoreCase("x"));
 	}
 
+	private void removeBookByID() {
+		System.out.println();
+		System.out.println("#########################");
+		System.out.println("#   Remove book by ID   #");
+		System.out.println("#########################");
+		System.out.println();
+		System.out.println("Enter the ID of the book you want to remove:");
 
+		String userChoice = getUserInput();
+		dbc.removeBookFromDatabaseByID(userChoice);
+	}
 
-	/* SORTING */ // TODO: sorting
+	private void removeBookByTitle() {
+		System.out.println();
+		System.out.println("############################");
+		System.out.println("#   Remove book by Title   #");
+		System.out.println("############################");
+		System.out.println();
+		System.out.println("Enter the Title of the book you want to remove:");
+
+		String userChoice = getUserInput();
+		dbc.removeBookFromDatabaseByTitle(userChoice);
+	}
+
+	/* SORTING *//* // TODO: sorting
 	@SuppressWarnings("unused")
 	void sortTitle() {
 		getBooks();
