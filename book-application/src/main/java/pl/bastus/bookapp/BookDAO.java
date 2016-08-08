@@ -155,7 +155,7 @@ public class BookDAO {
 		System.out.println("#################");
 		System.out.println();
 
-		dbc.getBooksFromDatabase(); // TODO: only one table, so maybe only print it out?
+		dbc.getBooksFromDatabase(); // TODO: only one table, so maybe print that one?
 	}
 
 		/*
