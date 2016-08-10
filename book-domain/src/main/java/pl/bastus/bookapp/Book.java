@@ -2,14 +2,15 @@ package pl.bastus.bookapp;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Book {
     private String bookTitle;
+    private String author;
     private String bookDate;
     private float bookPrice;
-    private String author;
     private LocalDate bookAddedDate;
-
     private DateTimeFormatter day = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     /* String constructor */
@@ -24,7 +25,7 @@ public class Book {
 
     /* Normal constructor */
     @SuppressWarnings("unused")
-    Book(String bookTitle, String bookDate, float bookPrice, String author, LocalDate bookAddedDate) {
+    Book(String bookTitle, String author, String bookDate, LocalDate bookAddedDate, float bookPrice) {
         this.bookTitle = bookTitle;
         this.bookDate = bookDate;
         this.bookPrice = bookPrice;
@@ -96,10 +97,6 @@ public class Book {
         this.bookPrice = bookPrice;
     }
 
-    void setBookPrice(String bookPrice) {
-        this.bookPrice = Float.parseFloat(bookPrice);
-    }
-
     /* Author */
     String getAuthor() {
         return author;
@@ -119,10 +116,6 @@ public class Book {
         return bookAddedDate.format(day);
     }
 
-    void setBookAddedDate(LocalDate bookAddedDate) {
-        this.bookAddedDate = bookAddedDate;
-    }
-
     @SuppressWarnings("unused")
     void setBookAddedDate(String bookAddedDate) {
         this.bookAddedDate = LocalDate.parse(bookAddedDate, day);
@@ -132,4 +125,32 @@ public class Book {
     public String toString() {
         return bookTitle;
     }
+
+    /* SORTING *//* // TODO: sorting
+	@SuppressWarnings("unused")
+	void sortTitle() {
+		getBooks();
+		Collections.sort(books, (Book b1, Book b2) -> b1.getBookTitle().compareTo(b2.getBookTitle()));
+		books.forEach(Book::showBookInfo);
+	}
+	@SuppressWarnings("unused")
+	void sortAuthor() {
+		getBooks();
+		Collections.sort(books, (Book b1, Book b2) -> b1.getAuthor().compareTo(b2.getAuthor()));
+		books.forEach(Book::showBookInfo);
+	}
+	@SuppressWarnings("unused")
+	void sortPrice() {
+		getBooks();
+		Collections.sort(books, (Book b1, Book b2) -> b1.getBookPriceString().compareTo(b2.getBookPriceString()));
+		books.forEach(Book::showBookInfo);
+	}
+	@SuppressWarnings("unused")
+	void sortDate() {
+		getBooks();
+		Collections.sort(books, (Book b1, Book b2) -> b1.getBookDate().compareTo(b2.getBookDate()));
+		books.forEach(Book::showBookInfo);
+	}
+
+	/* END */
 }

@@ -1,14 +1,11 @@
 package pl.bastus.bookapp;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
 class DatabaseConnect {
-    private static final String DB_DRIVER_CLASS="com.mysql.jdbc.Driver";
+    //private static final String DB_DRIVER_CLASS="com.mysql.jdbc.Driver";
     private static final String DB_URL="jdbc:mysql://localhost:3306/javatutorials?useUnicode=true&" +
             "useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     private static final String DB_USERNAME="root";
@@ -31,15 +28,4 @@ class DatabaseConnect {
         System.out.println("DB Connection created successfully");
         return conn;
     }
-
-    /*
-    void disconnectDatabase() {
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
 }
