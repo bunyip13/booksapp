@@ -1,43 +1,36 @@
-package pl.bastus.bookapp;
+package pl.bastus.booksapp;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("unused")
 class AddBookDAO implements Input {
 
-    void passAddedBook() {
+    Book passAddedBook() {
         printAdd();
         String title = addTitle();
         String author = addAuthor();
         String date = addDate();
         LocalDate addedDate = addedDate();
         Float price = addPrice();
-
-        DatabaseAdd dba = new DatabaseAdd();
-        dba.addToDatabase(title, author, date, addedDate, price);
         System.out.println("Thank you. Book added.");
+        return new Book(title, author, date, addedDate, price);
+        //new DatabaseControllerDAO().addToDatabase(book);
     }
 
-    @SuppressWarnings("unused")
-    /*Book addBook() {
-        String title = addTitle();
-        String author = addAuthor();
-        String date = addDate();
-        Float price = addPrice();
-        LocalDate dateAdded = addedDate();
-    }*/ String addTitle() {
+    private String addTitle() {
         System.out.print("Book title: ");
         return getUserInput();
     }
 
-    String addAuthor() {
+    private String addAuthor() {
         System.out.print("Book author: ");
         return getUserInput();
     }
 
-    String addDate() {
+    private String addDate() {
 //		Pattern datePattern = Pattern.compile("[0-3]?[0-9]\\.[0-1]?[0-9]\\.[0-2][0-9]{3}");
         Pattern datePattern = Pattern.compile("[1-2][0-9]{3}");
         String loadedDate;
@@ -52,12 +45,12 @@ class AddBookDAO implements Input {
         return loadedDate;
     }
 
-    LocalDate addedDate() {
+    private LocalDate addedDate() {
         DateTimeFormatter day = DateTimeFormatter.ofPattern("dd-MM-yyyy"); // SQL przechowuje daty z pauzami
         return LocalDate.parse(LocalDate.now().format(day), day);
     }
 
-    Float addPrice() {
+    private Float addPrice() {
         Pattern pricePattern = Pattern.compile("[0-9]+(\\.[0-9]+)?");
         Matcher pricePattern_Matcher;
         String priceLoaded_Scanner;
@@ -75,7 +68,7 @@ class AddBookDAO implements Input {
         // while (Pattern.matches("[0-9]+(\\.[0-9]+)?", getbookPriceStr()));
     }
 
-    private void printAdd() {
+    private static void printAdd() {
         System.out.println();
         System.out.println("################");
         System.out.println("#   Add Book   #");

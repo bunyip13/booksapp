@@ -176,3 +176,6 @@ fabric.properties
 .dropbox
 .dropbox.attr
 .dropbox.cache
+
+# Own files
+*depreciated

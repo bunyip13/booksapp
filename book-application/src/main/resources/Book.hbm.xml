@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 18, 2016 1:29:07 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="pl.bastus.booksapp.Book" table="booksapp">
+        <id name="id" type="int">
+            <column name="id" />
+        </id>
+        <property name="title" type="java.lang.String">
+            <column name="title" />
+        </property>
+        <property name="author" type="java.lang.String">
+            <column name="author" />
+        </property>
+        <property name="date" type="java.lang.String">
+            <column name="date" />
+        </property>
+        <property name="date_added" type="java.time.LocalDate">
+            <column name="date_added" />
+        </property>
+        <property name="price" type="java.lang.Float">
+            <column name="price" />
+        </property>
+        <!--<property name="dept_id" type="int">
+            <column name="DEPT_ID" />
+        </property>-->
+    </class>
+</hibernate-mapping>

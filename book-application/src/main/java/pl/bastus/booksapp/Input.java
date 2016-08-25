@@ -1,4 +1,4 @@
-package pl.bastus.bookapp;
+package pl.bastus.booksapp;
 
 import java.util.Scanner;
 

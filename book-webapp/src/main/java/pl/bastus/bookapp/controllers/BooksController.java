@@ -1,4 +1,4 @@
-package pl.bastus.bookapp.controllers;
+package pl.bastus.booksapp.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import pl.bastus.bookapp.BookDAO;
-import pl.bastus.bookapp.Book;
-import pl.bastus.bookapp.dto.BookDTO;
+import pl.bastus.booksapp.BookDAO;
+import pl.bastus.booksapp.Book;
+import pl.bastus.booksapp.dto.BookDTO;
 
 @Controller
 public class BooksController {

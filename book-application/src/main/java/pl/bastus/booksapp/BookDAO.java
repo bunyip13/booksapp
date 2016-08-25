@@ -1,20 +1,20 @@
-package pl.bastus.bookapp;
+package pl.bastus.booksapp;
 
-import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
-public class BookDAO implements Input {
-	private List<Book> books = new LinkedList<>();
+@SuppressWarnings("unused")
+class BookDAO {
+	private BookDAO bookDAO;
+	private ArrayList<Book> books = new ArrayList<>();
 
 	/* GETTERS && SETTERS */
-	@SuppressWarnings("unused")
-	public void addBookToBooks(Book b) {
+	void addBookToBooks(Book b) {
 		books.add(b);
 	}
 
 	@SuppressWarnings("unused")
-	public List<Book> getBooks() {
+	private ArrayList<Book> getBooks() {
 		return books;
 	}
 
@@ -27,49 +27,18 @@ public class BookDAO implements Input {
 		}
 	}
 
-	/* MENU */
-	void menuDisplay() throws SQLException {
-		String userChoice;
-		do {
-			System.out.println();
-			System.out.println("What to do now?");
-			System.out.println("[1] Add book");
-			System.out.println("[2] Update book");
-			System.out.println("[3] Delete book");
-			System.out.println("[4] Show books");
-			System.out.println("[x] Exit");
-
-			userChoice = getUserInput();
-			switch (userChoice) {
-				case "1":
-					AddBookDAO ab = new AddBookDAO();
-					ab.passAddedBook();
-					break;
-				case "2":
-					UpdateBookDAO ub = new UpdateBookDAO();
-					ub.updateBookByID();
-					break;
-				case "3":
-					RemoveBookDAO rb = new RemoveBookDAO();
-					rb.removeBook();
-					break;
-				case "4":
-					showBooks();
-					break;
-			}
-		} while (!userChoice.equalsIgnoreCase("x"));
+	/* SHOWING */
+	void showBooks() {
+		printShowBooks();
+		//new DatabaseControllerDAO().getBooksToList();
 	}
 
-	/* SHOWING */
-	private void showBooks() {
+	private void printShowBooks() {
 		System.out.println();
 		System.out.println("#################");
 		System.out.println("#   Book list   #");
 		System.out.println("#################");
 		System.out.println();
-
-        DatabaseController dbc = new DatabaseController();
-		dbc.getBooksFromDatabase();
 	}
 
 		/*
@@ -101,4 +70,28 @@ public class BookDAO implements Input {
 		else {
 			System.out.println("No such book, sorry!");
 		}*/
+
+    /* SORTING */ // TODO: sorting
+	@SuppressWarnings("unused")
+	void sortTitle() {
+		Collections.sort(books, (Book b1, Book b2) -> b1.getBookTitle().compareTo(b2.getBookTitle()));
+		books.forEach(Book::toString);
+	}
+	@SuppressWarnings("unused")
+	void sortAuthor() {
+		Collections.sort(books, (Book b1, Book b2) -> b1.getBookAuthor().compareTo(b2.getBookAuthor()));
+		books.forEach(Book::toString);
+	}
+	/*@SuppressWarnings("unused")
+	void sortPrice() {
+		Collections.sort(books, (Book b1, Book b2) -> b1.getBookPrice().compareTo(b2.getBookPrice()));
+		books.forEach(Book::toString);
+	}*/
+	@SuppressWarnings("unused")
+	void sortDate() {
+		Collections.sort(books, (Book b1, Book b2) -> b1.getBookDate().compareTo(b2.getBookDate()));
+		books.forEach(Book::toString);
+	}
+
+	/* END */
 }

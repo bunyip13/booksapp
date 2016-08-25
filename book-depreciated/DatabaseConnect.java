@@ -1,15 +1,15 @@
-package pl.bastus.bookapp;
+package pl.bastus.booksapp;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-class DatabaseConnect {
+interface DatabaseConnect {
     //private static final String DB_DRIVER_CLASS="com.mysql.jdbc.Driver";
-    private static final String DB_URL="jdbc:mysql://localhost:3306/javatutorials?useUnicode=true&" +
+    String DB_URL="jdbc:mysql://localhost:3306/javatutorials?useUnicode=true&" +
             "useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-    private static final String DB_USERNAME="root";
-    private static final String DB_PASSWORD="";
+    String DB_USERNAME="root";
+    String DB_PASSWORD="";
 
     static Connection connectDatabase() {
         //Properties props = new Properties();

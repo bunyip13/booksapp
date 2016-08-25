@@ -1,4 +1,4 @@
-package pl.bastus.bookapp;
+package pl.bastus.booksapp;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
@@ -25,7 +25,7 @@ public class FirstServlet extends HttpServlet {
      */
     public FirstServlet() {
         super();
-        // TODO Auto-generated constructor stub
+        // Auto-generated constructor stub
     }
 
     /**
@@ -35,7 +35,7 @@ public class FirstServlet extends HttpServlet {
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         Date date = new Date();
-        out.println(HTML_START + "<h2>Hi There!</h2><br/><h3>Date="+date +"</h3>"+HTML_END);
+        out.println(HTML_START + "<h2>Hi There!</h2><br/><h3>Date=" +date+ "</h3>"+HTML_END);
     }
 
     /**
@@ -45,5 +45,4 @@ public class FirstServlet extends HttpServlet {
             throws ServletException, IOException {
         // TODO Auto-generated method stub
     }
-
 }

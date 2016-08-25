@@ -1,9 +1,9 @@
-package pl.bastus.bookapp;
+package pl.bastus.booksapp;
 
 import java.time.LocalDate;
 
 class UpdateBookDAO extends AddBookDAO implements Input {
-    private DatabaseUpdate dbu;
+    private DatabaseControllerDAO dc;
 
     @SuppressWarnings("unused")
     void updateBook() {
@@ -11,12 +11,7 @@ class UpdateBookDAO extends AddBookDAO implements Input {
 
         String userChoice;
         do {
-            System.out.println();
-            System.out.println("Search book by id or title?");
-            System.out.println("[1] ID");
-            System.out.println("[2] Title");
-            System.out.println("[x] Exit");
-
+            printUpdateSelect();
             userChoice = getUserInput();
             switch (userChoice) {
                 case "1":
@@ -37,8 +32,10 @@ class UpdateBookDAO extends AddBookDAO implements Input {
         LocalDate addedDate = addedDate();
         Float price = addPrice();
 
-        dbu = new DatabaseUpdate();
-        dbu.updateBookDatabaseByID(id, title, author, date, addedDate, price);
+        Book book = new Book(title, author, date, addedDate, price);
+        dc = new DatabaseControllerDAO();
+        dc.updateBookDatabaseSelectID(id, book);
+        System.out.println("Thank you. Book updated.");
     }
 
     private void updateBookByTitle() {
@@ -49,8 +46,11 @@ class UpdateBookDAO extends AddBookDAO implements Input {
         String date = addDate();
         LocalDate addedDate = addedDate();
         Float price = addPrice();
-        dbu = new DatabaseUpdate();
-        dbu.updateBookDatabaseByTitle(oldTitle, title, author, date, addedDate, price);
+
+        Book book = new Book(title, author, date, addedDate, price);
+        dc = new DatabaseControllerDAO();
+        dc.updateBookDatabaseByTitle(oldTitle, book);
+        System.out.println("Thank you. Book updated.");
     }
 
     private Integer getBookID() {
@@ -62,6 +62,14 @@ class UpdateBookDAO extends AddBookDAO implements Input {
     private String getBookTitle() {
         System.out.println("Enter the Title of the book you want to update: ");
         return getUserInput();
+    }
+
+    private void printUpdateSelect() {
+        System.out.println();
+        System.out.println("Search book by id or title?");
+        System.out.println("[1] ID");
+        System.out.println("[2] Title");
+        System.out.println("[x] Exit");
     }
 
     private void printUpdate() {
